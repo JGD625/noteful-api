@@ -8,7 +8,7 @@ const jsonParser = express.json();
 
 const serializeFolder = (folder) => ({
   id: folder.id,
-  folder_name: xss(folder.name),
+  name: xss(folder.name),
 });
 
 foldersRouter
@@ -22,8 +22,8 @@ foldersRouter
       .catch(next); 
   })
   .post(jsonParser, (req, res, next) => {
-    const { folder_name } = req.body;
-    const newName = { folder_name }; 
+    const { name } = req.body;
+    const newName = { name }; 
     if(!newName){
       return res.status(400).json({
         error: { message: 'Missing folder name in request' } 

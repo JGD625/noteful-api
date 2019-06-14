@@ -8,7 +8,7 @@ const jsonParser = express.json();
 
 const serializeNote = (note) => ({
   id: note.id,
-  note_name: xss(note.note_name),
+  name: xss(note.name),
   modified: note.modified,
   folder_id: note.folder_id,
   content: note.content,
@@ -25,9 +25,9 @@ notesRouter
       .catch(next);
   })
   .post(jsonParser, (req, res, next) => {
-    const { note_name, folder_id, content } = req.body;
+    const { name, folder_id, content } = req.body;
     console.log(req.body)
-    if(!note_name){
+    if(!name){
       return res.status(400).json({
         error: { message: 'Missing name in request' } 
       });
@@ -38,7 +38,7 @@ notesRouter
       });
     }
     
-    const newNote = { note_name, folder_id, content };
+    const newNote = { name, folder_id, content };
     
     NotesService.insertNote(
       req.app.get('db'),
@@ -85,8 +85,8 @@ notesRouter
       .catch(next);
   })
   .patch(jsonParser, (req, res, next) => {
-    const { note_name, folder_id, content } = req.body;
-    if(!note_name) {
+    const { name, folder_id, content } = req.body;
+    if(!name) {
       return res.status(400).json({
         error: {
           message: 'Request must have a note name'
@@ -102,7 +102,7 @@ notesRouter
     }
 
     const noteToUpdate ={
-      note_name,
+      name,
       folder_id,
       content
     };
