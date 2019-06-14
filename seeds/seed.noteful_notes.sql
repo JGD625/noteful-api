@@ -1,7 +1,15 @@
-insert into noteful_notes (notes_name, content, folder_id, modified)
-values
-    ('Dogs', 'Dogs are the best.', 1, now()),
-    ('Cats', 'Cats are okay I guess.', 2, now()),
-    ('Birds', 'Birds are loud but lovely.', 3, now()),
-    ('Ponies', 'Ponies are meaner than you would think.', 1, now()),
-    ('Sharks', 'Sharks are really just bitey dolphins.', 3, now());
+
+INSERT INTO noteful_notes (id, note_name, folder_id, content)
+VALUES
+  (1, 'Dogs', '1', 'lorem ipsum'),
+  (2, 'Cats', '2', 'lorem ipsum'),
+  (3, 'Pigs', '2', 'lorem ipsum'),
+  (4, 'Birds', '1', 'lorem ipsum'),
+  (5, 'Bears', '1', 'lorem ipsum'),
+  (6, 'Horses', '2','lorem ipsum'),
+  (7, 'Tigers', '3', 'lorem ipsum'),
+  (8, 'Wolves', '3', 'lorem ipsum'),
+  (9, 'Elephants', '2', 'lorem ipsum'),
+  (10, 'Lions', '1','lorem ipsum'); 
+
+  ALTER SEQUENCE noteful_notes RESTART WITH 11; 
