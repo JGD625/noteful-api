@@ -1,1 +1,0 @@
-alter table noteful_notes drop column if exists modified;
