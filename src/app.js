@@ -15,6 +15,8 @@ app.use(morgan((NODE_ENV === 'production') ? 'tiny' : 'common', {
 app.use(cors())
 app.use(helmet())
 
+app.use(express.json());
+
 app.use('/api/notes', notesRouter)
 app.use('/api/folders', foldersRouter)
 
