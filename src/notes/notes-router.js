@@ -43,7 +43,7 @@ notesRouter.route('/notes')
     });
   });
 
-notesRouter.route('/note/:id')
+notesRouter.route('/notes/:id')
   .get((req, res) => {
     const db = req.app.get('db');
 
