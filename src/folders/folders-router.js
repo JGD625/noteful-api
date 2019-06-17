@@ -6,10 +6,7 @@ const FoldersService = require('./folders-service')
 const foldersRouter = express.Router()
 const jsonParser = express.json()
 
-const serializedFolder = folder => ({
-    id: folder.id,
-    folder_name: folder.folder_name,
-})
+
 
 function sanitize(folder) {
   return {
