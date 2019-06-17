@@ -26,7 +26,7 @@ foldersRouter.route('/notes-by-folder/:id')
       }));
   });
 
-foldersRouter.route('/folder')
+foldersRouter.route('/folders')
   .get((req, res) => {
     const db = req.app.get('db');
 
@@ -50,7 +50,7 @@ foldersRouter.route('/folder')
     });
   });
 
-foldersRouter.route('/folder/:id')
+foldersRouter.route('/folders/:id')
   .get((req, res) => {
     const db = req.app.get('db');
 
