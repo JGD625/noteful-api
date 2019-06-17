@@ -9,9 +9,7 @@ const foldersRouter = require('./folders/folders-router')
 
 const app = express()
 
-app.use(morgan((NODE_ENV === 'production') ? 'tiny' : 'common', {
-  skip: () => NODE_ENV === 'test'
-}))
+app.use(morgan(‘dev’));
 app.use(cors())
 app.use(helmet())
 
