@@ -16,7 +16,7 @@ function sanitize(note) {
   };
 }
 
-notesRouter.route('/notes')
+notesRouter.route('/noteful')
   .get((req, res) => {
     const db = req.app.get('db');
 
@@ -43,7 +43,7 @@ notesRouter.route('/notes')
     });
   });
 
-notesRouter.route('/notes/:id')
+notesRouter.route('/note/:id')
   .get((req, res) => {
     const db = req.app.get('db');
 
