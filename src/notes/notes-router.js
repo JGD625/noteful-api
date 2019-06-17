@@ -16,7 +16,7 @@ function sanitize(note) {
   };
 }
 
-notesRouter.route('/noteful')
+notesRouter.route('/notes')
   .get((req, res) => {
     const db = req.app.get('db');
 
