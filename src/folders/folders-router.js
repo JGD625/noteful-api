@@ -11,88 +11,84 @@ const serializedFolder = folder => ({
     folder_name: folder.folder_name,
 })
 
-foldersRouter
-    .route('/')
-    .get((req, res, next) => {
-        const knexInstance = req.app.get('db')
-        FoldersService.getAllFolders(knexInstance)
-        .then(folders => {
-            res.json(folders.map(serializedFolder))
-        })
-        .catch(next)
-    })
-    .post(jsonParser, (req, res, next) => {
-        const { folder_name } = req.body
-        const newFolder = { folder_name }
+function sanitize(folder) {
+  return {
+    id : folder.id,
+    name : xss(folder.name)
+  };
+}
 
-        for ( const [key, value] of Object.entries(newFolder))
-            if (value == null)
-            return res.status(400).json({
-                error: { message: `Missing ${key} in request body`}
-            })
-        FoldersService.insertFolder(
-            req.app.get('db'),
-            newFolder
-        )
-        .then(folder => {
-            res
-                .status(201)
-                .location(path.posix.join(req.originalUrl, `/${folder.id}`))
-                .json(serializedFolder(folder))
-        })
-        .catch(next)    
-    })
-foldersRouter
-    .route('/:id')
-    .all((req, res, next) => {
-        FoldersService.getById(
-            req.app.get('db'),
-            req.params.id
-        )
-        .then(folder => {
-            if(!folder) {
-                return res.status(404).json({
-                    error: { message: `Folder doesn't exist`}
-                })
-            }
-            res.folder = folder
-            next()
-        })
-        .catch(next)
-    })
-    .get((req, res, next) => {
-        res.json(serializedFolder(res.folder))
-    })
-    .delete((req, res, next) => {
-        FoldersService.deleteFolder(
-            req.app.get('db'),
-            req.params.id
-        )
-        .then(numRowsAffected => {
-            res.status(200).json({message:`Deleted successfully`})
-        })
-        .catch(next)
-    })
-    .patch(jsonParser, (req, res, next) => {
-        const { folder_name } = req.body
-        const folderToUpdate = {folder_name }
-        const numberOfValues = Object.values(folderToUpdate).filter(Boolean).length
-        if(numberOfValues === 0) {
-            return res.status(400).json({
-                error: {
-                    message: `Request body must contain 'name'`
-                }
-            })
+foldersRouter.route('/notes-by-folder/:id')
+  .get((req, res) => {
+    const db = req.app.get('db');
+
+    return folders
+      .getFoldersNotes(db, req.params.id)
+      .then((data => {
+        res.json(data.map(sanitize));
+      }));
+  });
+
+foldersRouter.route('/folder')
+  .get((req, res) => {
+    const db = req.app.get('db');
+
+    return folders
+      .getAllFolders(db)
+      .then((data => {
+        res.json(data.map(sanitize));
+      }));
+  })
+  .post((req, res) => {
+    const { id, name } = req.body;
+
+    const folder = {
+      id,
+      name
+    };
+    const db = req.app.get('db');
+
+    folders.insertFolder(db, folder).then(resjson => {
+      res.status(200).json(resjson);
+    });
+  });
+
+foldersRouter.route('/folder/:id')
+  .get((req, res) => {
+    const db = req.app.get('db');
+
+    return folders
+      .getById(db,req.params.id)
+      .then(resjson=> {
+        if (resjson.length > 0) {
+          res.json(resjson.map(sanitize));
         }
-        FoldersService.updateFolder(
-            req.app.get('db'),
-            req.params.id,
-            folderToUpdate
-        )
-        .then(numRowsAffected => {
-            res.status(204).end()
-        })
-        .catch(next)
-    })
+        else{
+          res.status(404).end();
+        }
+      });
+  })
+  .delete((req, res) => {
+    const db = req.app.get('db');
 
-    module.exports = foldersRouter
+    return folders.deleteFolder(db, req.params.id).then(resjson => {
+      if (resjson === 1) {
+        res.status(204).end();
+      } else {
+        res.status(404).end();
+      }
+    });
+  })
+  .patch((req, res) =>{
+    const db = req.app.get('db');
+
+    if (Object.keys(req.body).length === 0) {
+      return res.status(400).end();
+    }
+
+    return folders.updateFolder(db,req.params.id, req.body).then(() => {
+      res.status(204).end();
+    });
+  });
+
+module.exports = foldersRouter;
