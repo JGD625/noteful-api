@@ -17,8 +17,8 @@ app.use(helmet())
 
 app.use(express.json());
 
-app.use('/api/notes', notesRouter)
-app.use('/api/folders', foldersRouter)
+app.use('/api', notesRouter)
+app.use('/api', foldersRouter)
 
 app.get('/', (req, res) => {
   res.send('Hello, world!')
