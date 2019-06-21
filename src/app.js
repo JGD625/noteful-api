@@ -9,30 +9,32 @@ const foldersRouter = require('./folders/folders-router')
 
 const app = express()
 
-app.use(morgan((NODE_ENV === 'production') ? 'tiny' : 'common', {
-  skip: () => NODE_ENV === 'test'
-}))
+
+const morganOption = (NODE_ENV === 'production')
+  ? 'tiny'
+  : 'common';
+
+app.use(morgan(morganOption))
 app.use(cors())
 app.use(helmet())
 
-app.use(express.json());
-
-app.use('/api', notesRouter)
-app.use('/api', foldersRouter)
+app.use('/api/notes', notesRouter)
+app.use('/api/folders', foldersRouter)
 
 app.get('/', (req, res) => {
-  res.send('Hello, world!')
-})
+       res.send('Hello, world!')
+     })
 
-app.use(function errorHandler(error, req, res, next) {
-  let response
-  if (NODE_ENV === 'production') {
-    response = { error: 'Server error' }
-  } else {
-    console.error(error)
-    response = { message: error.message, error }
-  }
-  res.status(500).json(response)
-})
+     app.use(function errorHandler(error, req, res, next) {
+           let response
+           if (NODE_ENV === 'production') {
+             response = { error: { message: 'server error' } }
+           } else {
+             console.error(error)
+             response = { message: error.message, error }
+           }
+           res.status(500).json(response)
+         })
+    
 
 module.exports = app
