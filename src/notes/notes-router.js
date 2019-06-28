@@ -30,7 +30,7 @@ notesRouter
     const newNote = { name, folderId, content }
 
     for (const [key, value] of Object.entries(newNote)) {
-           if (value == null) {
+      if (value == null) {
              return res.status(400).json({
                error: { message: `Missing '${key}' in request body` }
              })
@@ -83,7 +83,7 @@ notesRouter
        })
   .patch(jsonParser, (req, res, next) => {
         const { name, folderId, content } = req.body
-        const noteToUpdate = { name, folderId, content }
+        const noteToUpdate = { id, name, folderId, content }
     
         const numberOfValues = Object.values(noteToUpdate).filter(Boolean).length
         if (numberOfValues === 0)

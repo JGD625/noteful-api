@@ -19,12 +19,12 @@ foldersRouter
     .then(folders =>{
       res.json(folders)
     })
-    .catch(next)
+    .catch(error => res.status(500).json(arguments))
 })
 
 .post(jsonParser, (req, res, next) => {
-  const { name, folderId } = req.body
-  const newFolder = { name, folderId }
+  const { name } = req.body
+  const newFolder = { name }
 
   for (const [key, value] of Object.entries(newFolder)) {
          if (value == null) {
@@ -34,7 +34,7 @@ foldersRouter
          }
        }
 
-  FolderService.insertFolder(
+  FoldersService.insertFolder(
     req.app.get('db'),
     newFolder
   )
